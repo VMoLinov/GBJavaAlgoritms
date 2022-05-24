@@ -14,7 +14,8 @@ public class Main {
     }
 
     private static int toDegree(int number, int pow) { // O(n)
-        if (pow == 0) return 0;
+        if (number == 0) return 0;
+        else if (pow == 0) return 1;
         else {
             int num = 1;
             for (int i = 0; i < pow; i++) num *= number;
