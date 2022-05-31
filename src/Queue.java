@@ -27,6 +27,7 @@ class Queue {
 
     public void insert(int value) {
         if (isFull()) {
+            ++maxSize;
             int[] tmpArr = new int[maxSize *= 2];
             if (tail >= head) {
                 System.arraycopy(queue, 0, tmpArr, 0, queue.length);

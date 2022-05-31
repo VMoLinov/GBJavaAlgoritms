@@ -9,6 +9,10 @@ class Stack {
         head = -1;
     }
 
+    public int getHead() {
+        return head;
+    }
+
     public void isEmpty() {
         if (head == -1) throw new RuntimeException("Stack is empty");
     }
@@ -17,14 +21,14 @@ class Stack {
         return head == maxSize - 1;
     }
 
-    public void push(int i) {
+    public void push(int value) {
         if (isFull()) {
-            maxSize *= 2;
-            int[] newStack = new int[maxSize];
+            ++maxSize;
+            int[] newStack = new int[maxSize *= 2];
             System.arraycopy(stack, 0, newStack, 0, stack.length);
             stack = newStack;
         }
-        stack[++head] = i;
+        stack[++head] = value;
     }
 
     public int pop() {
