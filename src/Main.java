@@ -1,13 +1,30 @@
 public class Main {
 
     public static void main(String[] args) {
-        testQueueAndStack();
-        checkBracesInStack("(3)((4))(((5)))");
-        checkCharsEquality("(3)((4))(((5)))", '(', ')');
-        checkBracesInStack("(3)4))(((5)))");
-        checkCharsEquality("(3)4))(((5)))", '(', ')');
-        checkBracesInStack("(3)((4(((5)))");
-        checkCharsEquality("(3)((4(((5)))", '(', ')');
+//        testQueueAndStack();
+        testDeck();
+//        checkBracesInStack("(3)((4))(((5)))");
+//        checkCharsEquality("(3)((4))(((5)))", '(', ')');
+//        checkBracesInStack("(3)4))(((5)))");
+//        checkCharsEquality("(3)4))(((5)))", '(', ')');
+//        checkBracesInStack("(3)((4(((5)))");
+//        checkCharsEquality("(3)((4(((5)))", '(', ')');
+    }
+
+    private static void testDeck() {
+        Deck deck = new Deck(5);
+        deck.insertFirst(1);
+        deck.insertFirst(2);
+        deck.insertLast(3);
+        deck.insertLast(4);
+        deck.insertLast(5);
+        deck.insertFirst(6);
+        System.out.println(deck);
+        deck.getFirst();
+        deck.getFirst();
+        deck.getFirst();
+        deck.getFirst();
+        System.out.println(deck);
     }
 
     private static void checkBracesInStack(String text) {
@@ -68,16 +85,5 @@ public class Main {
         System.out.println(q);
 //        Stack stack = new Stack(0);
 //        System.out.println(stack.pop());
-    }
-
-    enum Chars {
-        BRACES_IN('('),
-        BRACES_OUT(')');
-
-        private final char value;
-
-        Chars(char value) {
-            this.value = value;
-        }
     }
 }
