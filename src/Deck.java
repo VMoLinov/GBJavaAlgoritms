@@ -8,13 +8,13 @@ public class Deck {
     public Deck(int size) {
         maxSize = size;
         deck = new int[maxSize];
-        head = 0;
-        tail = -1;
+        head = maxSize / 2; // Начнём идти с серидины массива. При добавлении элементов у head будет ПОСТдекремент
+        tail = maxSize / 2; // у tail - ПРЕинкремент. В таком случае ячейки не перезатрут друг друга
         items = 0;
     }
 
     public void isEmpty() {
-        if (items == 0) throw new RuntimeException("Queue is empty");
+        if (items == 0) throw new RuntimeException("Deck is empty");
     }
 
     public boolean isFull() {
@@ -25,11 +25,35 @@ public class Deck {
         return items;
     }
 
+    /**
+     * Логика добавления такая же, как у очереди, если нужно добавить размер - добавляем пространство либо влева от head,
+     * либо вправо от tail, либо между head и tail в зависимости от ситуации
+     */
+
+    public void insertFirst(int value) {
+        if (isFull()) {
+            ++maxSize; // На случай, если инициализирована дека с размером 0
+            int[] tmpArr = new int[maxSize *= 2];
+            if (tail > head) {
+                System.arraycopy(deck, 0, tmpArr, maxSize - deck.length, deck.length);
+            } else {
+                System.arraycopy(deck, 0, tmpArr, 0, tail + 1);
+                System.arraycopy(deck, head, tmpArr,
+                        maxSize - (deck.length - head), deck.length - head);
+                head = maxSize - (deck.length - head);
+            }
+            deck = tmpArr;
+        }
+        deck[head--] = value;
+        if (head == -1) head = maxSize - 1;
+        ++items;
+    }
+
     public void insertLast(int value) {
         if (isFull()) {
             ++maxSize;
             int[] tmpArr = new int[maxSize *= 2];
-            if (tail >= head) {
+            if (tail > head) {
                 System.arraycopy(deck, 0, tmpArr, 0, deck.length);
             } else {
                 System.arraycopy(deck, 0, tmpArr, 0, tail + 1);
@@ -41,25 +65,6 @@ public class Deck {
         }
         if (tail == maxSize - 1) tail = -1;
         deck[++tail] = value;
-        ++items;
-    }
-
-    public void insertFirst(int value) {
-        if (isFull()) {
-            ++maxSize;
-            int[] tmpArr = new int[maxSize *= 2];
-            if (tail >= head) {
-                System.arraycopy(deck, 0, tmpArr, 0, deck.length);
-            } else {
-                System.arraycopy(deck, 0, tmpArr, 0, tail + 1);
-                System.arraycopy(deck, head, tmpArr,
-                        maxSize - (deck.length - head), deck.length - head);
-                head = maxSize - head + 1;
-            }
-            deck = tmpArr;
-        }
-        if (head == 0) head = maxSize;
-        deck[--head] = value;
         ++items;
     }
 

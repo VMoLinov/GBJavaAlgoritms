@@ -1,14 +1,14 @@
 public class Main {
 
     public static void main(String[] args) {
-//        testQueueAndStack();
+        testQueueAndStack();
         testDeck();
-//        checkBracesInStack("(3)((4))(((5)))");
-//        checkCharsEquality("(3)((4))(((5)))", '(', ')');
-//        checkBracesInStack("(3)4))(((5)))");
-//        checkCharsEquality("(3)4))(((5)))", '(', ')');
-//        checkBracesInStack("(3)((4(((5)))");
-//        checkCharsEquality("(3)((4(((5)))", '(', ')');
+        checkBracesInStack("(3)((4))(((5)))");
+        checkCharsEquality("{3}{{4}}{{{5}}}", '{', '}');
+        checkBracesInStack("(3)4))(((5)))");
+        checkCharsEquality("{3}4}}{{{5}}}", '{', '}');
+        checkBracesInStack("(3)((4(((5)))");
+        checkCharsEquality("{3}{{4{{{5}}}", '{', '}');
     }
 
     private static void testDeck() {
@@ -20,11 +20,13 @@ public class Main {
         deck.insertLast(5);
         deck.insertFirst(6);
         System.out.println(deck);
+        deck.insertFirst(9);
         deck.getFirst();
         deck.getFirst();
         deck.getFirst();
-        deck.getFirst();
+        System.out.println(deck.getFirst());
         System.out.println(deck);
+        System.out.println(deck.getFirst());
     }
 
     private static void checkBracesInStack(String text) {
@@ -83,7 +85,5 @@ public class Main {
         Queue q = new Queue(0);
         q.insert(1);
         System.out.println(q);
-//        Stack stack = new Stack(0);
-//        System.out.println(stack.pop());
     }
 }
