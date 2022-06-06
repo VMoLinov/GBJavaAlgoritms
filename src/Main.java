@@ -1,12 +1,3 @@
-class Node {
-    public Cat cat;
-    public Node next;
-
-    public Node(Cat cat) {
-        this.cat = cat;
-    }
-}
-
 class Cat {
     String name;
     int age;
@@ -21,11 +12,30 @@ class Cat {
     }
 }
 
-class LinkedList {
-    public Node head;
+class Node {
+    Cat cat;
+    Node next;
 
-    public LinkedList() {
+    Node(Cat cat) {
+        this.cat = cat;
+    }
+}
+
+class LinkedList {
+    private Node head;
+    private Node tail;
+
+    LinkedList() {
         head = null;
+        tail = null;
+    }
+
+    public Node getHead() {
+        return head;
+    }
+
+    public void setHead(Node head) {
+        this.head = head;
     }
 
     public boolean isEmpty() {
@@ -34,14 +44,47 @@ class LinkedList {
 
     public void insert(Cat cat) {
         Node newNode = new Node(cat);
+        if (isEmpty()) tail = newNode;
         newNode.next = head;
         head = newNode;
     }
 
+    public void insertLast(Cat cat) {
+        Node newNode = new Node(cat);
+        if (isEmpty()) head = newNode;
+        else tail.next = newNode;
+        tail = newNode;
+    }
+
     public String delete() {
         Node temp = head;
+        if (head.next == null) tail = null;
         head = head.next;
         return temp.cat.name;
+    }
+
+    public String delete(String name) {
+        Node current = head;
+        Node previous = tail;
+        while (!current.cat.name.equals(name)) {
+            if (current.next == null) return null;
+            else {
+                previous = current;
+                current = current.next;
+            }
+        }
+        if (current == head) head = head.next;
+        else previous.next = current.next;
+        return current.cat.name;
+    }
+
+    public Cat find(Cat cat) {
+        Node current = head;
+        while (current.cat != cat) {
+            if (current.next == null) return null;
+            else current = current.next;
+        }
+        return current.cat;
     }
 
     public void display() {
@@ -50,6 +93,80 @@ class LinkedList {
             current.cat.display();
             current = current.next;
         }
+    }
+}
+
+class LinkIterator {
+    private final LinkedList list;
+    private Node current;
+    private Node previous;
+
+    public LinkIterator(LinkedList list) {
+        this.list = list;
+        this.reset();
+    }
+
+    public void reset() {
+        current = list.getHead();
+        previous = null;
+    }
+
+    public boolean hasNext() {
+        return !(current.next == null);
+    }
+
+    public void nextNode() {
+        previous = current;
+        current = current.next;
+    }
+
+    public Node getCurrent() {
+        return current;
+    }
+
+    public void insertAfter(Cat cat) {
+        Node newNode = new Node(cat);
+        if (list.isEmpty()) {
+            list.setHead(newNode);
+            current = newNode;
+        } else {
+            newNode.next = current.next;
+            current.next = newNode;
+            nextNode();
+        }
+    }
+
+    public void insertBefore(Cat cat) {
+        Node newNode = new Node(cat);
+        if (previous == null) {
+            newNode.next = list.getHead();
+            list.setHead(newNode);
+            reset();
+        } else {
+            newNode.next = previous.next;
+            previous.next = newNode;
+            current = newNode;
+        }
+    }
+
+    public String deleteCurrent() {
+        Cat cat = current.cat;
+        if (previous == null) {
+            list.setHead(current.next);
+            reset();
+        } else {
+            previous.next = current.next;
+            if (hasNext()) {
+                reset();
+            } else {
+                current = current.next;
+            }
+        }
+        return cat.name;
+    }
+
+    public LinkIterator getIterator() {
+        return new LinkIterator(list);
     }
 }
 
@@ -72,6 +189,10 @@ class Queue {
         return queue.delete();
     }
 
+    public String delete(String name) {
+        return queue.delete(name);
+    }
+
     public void display() {
         queue.display();
     }
@@ -89,8 +210,7 @@ public class Main {
         queue.insert(cat3);
         queue.insert(cat4);
         queue.display();
-        while (!queue.isEmpty()) {
-            System.out.printf("Элемент %s удалён из очереди%n", queue.delete());
-        }
+        System.out.printf("Элемент %s удалён из списка%n", queue.delete("Bubble"));
+        queue.display();
     }
 }
