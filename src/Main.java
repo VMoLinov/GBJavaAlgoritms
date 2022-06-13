@@ -1,64 +1,44 @@
-import java.util.Objects;
+import java.util.Random;
 
 public class Main {
-    private static class Cat {
-        String name;
-        int age;
+    private static final int SIZE = 200;
 
-        public Cat(String name, int age) {
-            this.name = name;
-            this.age = age;
+    public static void main(String[] args) {
+        Random random = new Random();
+        Tree[] trees = new Tree[SIZE];
+        for (int i = 0; i < trees.length; i++) {
+            trees[i] = new Tree();
         }
-
-        public String getName() {
-            return name;
+        int[] deeps = new int[SIZE];
+        for (int i = 0; i < 200; i++) {
+            for (int j = 0; j < 100; j++) {
+                trees[i].insert(random.nextInt(200) - 100);
+            }
+            deeps[i] = trees[i].deep();
         }
-
-        public void setName(String name) {
-            this.name = name;
+        int count = 0;
+        for (int deep : deeps) {
+            if (deep > 0) {
+                ++count;
+            }
         }
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Cat cat = (Cat) o;
-            return age == cat.age &&
-                    name.equals(cat.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name, age);
-        }
-
-        @Override
-        public String toString() {
-            return String.format("C (%s, %d)", name, age);
-        }
+        System.out.println(count);
     }
 
     public static class Tree {
-        public class TreeNode {
-            private Cat cat;
+        public static class TreeNode {
+
+            private final int value;
             public TreeNode leftChild;
             public TreeNode rightChild;
 
-            public TreeNode(Cat cat) {
-                this.cat = cat;
+            public TreeNode(int value) {
+                this.value = value;
             }
 
             @Override
             public String toString() {
-                return String.format("TN(%s)", cat);
+                return String.format("TN(%d)", value);
             }
         }
 
@@ -68,8 +48,22 @@ public class Main {
             root = null;
         }
 
-        public void insert(Cat c) {
-            TreeNode node = new TreeNode(c);
+        public int deep() {
+            if (root == null) return 0;
+            return Math.abs(calcDeep(root.leftChild, 1) - calcDeep(root.rightChild, 1));
+        }
+
+        private int calcDeep(TreeNode current, int count) {
+            if (current != null) {
+                count++;
+                calcDeep(current.leftChild, count);
+                calcDeep(current.rightChild, count);
+            }
+            return count;
+        }
+
+        public void insert(int value) {
+            TreeNode node = new TreeNode(value);
             if (root == null) {
                 root = node;
             } else {
@@ -77,13 +71,13 @@ public class Main {
                 TreeNode parent;
                 while (true) {
                     parent = current;
-                    if (c.age < current.cat.age) {
+                    if (value < current.value) {
                         current = current.leftChild;
                         if (current == null) {
                             parent.leftChild = node;
                             return;
                         }
-                    } else if (c.age > current.cat.age) {
+                    } else if (value > current.value) {
                         current = current.rightChild;
                         if (current == null) {
                             parent.rightChild = node;
@@ -96,10 +90,10 @@ public class Main {
             }
         }
 
-        public Cat find(int age) {
+        public Integer find(int value) {
             TreeNode current = root;
-            while (current.cat.age != age) {
-                if (age < current.cat.age)
+            while (current.value != value) {
+                if (value < current.value)
                     current = current.leftChild;
                 else
                     current = current.rightChild;
@@ -107,7 +101,7 @@ public class Main {
                 if (current == null)
                     return null;
             }
-            return current.cat;
+            return current.value;
         }
 
         private void inOrderTravers(TreeNode current) {
@@ -122,13 +116,13 @@ public class Main {
             inOrderTravers(root);
         }
 
-        public boolean delete(int age) {
+        public boolean delete(int value) {
             TreeNode curr = root;
             TreeNode prev = root;
             boolean isLeftChild = true;
-            while (curr.cat.age != age) {
+            while (curr.value != value) {
                 prev = curr;
-                if (age < curr.cat.age) {
+                if (value < curr.value) {
                     isLeftChild = true;
                     curr = curr.leftChild;
                 } else {
@@ -187,6 +181,5 @@ public class Main {
             }
             return successor;
         }
-
     }
 }
